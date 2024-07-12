@@ -7,8 +7,9 @@ class CustomTextField extends StatelessWidget {
   final int? maxLines;
   final String? hintText;
   final String? errorText;
-  final bool obscureText;
   final TextInputType? textInputType;
+  final bool obscureText;
+  final TextStyle? textStyle;
   const CustomTextField({
     super.key,
     this.label,
@@ -18,6 +19,10 @@ class CustomTextField extends StatelessWidget {
     this.errorText,
     this.textInputType = TextInputType.text,
     this.obscureText = false,
+    this.textStyle = const TextStyle(
+      color: CustomColors.lightBlack,
+      fontSize: 18,
+    ),
   });
 
   @override
@@ -48,7 +53,7 @@ class CustomTextField extends StatelessWidget {
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: TextStyle(
-                color: Colors.white.withOpacity(0.3),
+                color: Colors.black.withOpacity(0.3),
                 fontSize: 14,
               ),
               errorText: errorText,
@@ -73,10 +78,7 @@ class CustomTextField extends StatelessWidget {
               filled: true,
               fillColor: CustomColors.black10,
             ),
-            style: const TextStyle(
-              color: CustomColors.lightBlack,
-              fontSize: 18,
-            ),
+            style: textStyle,
           ),
         ],
       ),
