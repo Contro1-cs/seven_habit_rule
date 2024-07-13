@@ -1,18 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seven_habit_rule/modules/onboarding/screens/login.dart';
+import 'package:seven_habit_rule/modules/riverpod/bottom_nav_bar_counter.dart';
 import 'package:seven_habit_rule/modules/shared/widgets/colors.dart';
 import 'package:seven_habit_rule/modules/shared/widgets/custom_textfield.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController goalController = TextEditingController();
 
@@ -41,7 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
       }
     });
-  } 
+  }
 
   @override
   void initState() {
@@ -57,47 +59,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Profile',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut().then((value) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LoginScreen(),
-                  ),
-                );
-              });
-            },
-            icon: Icon(
-              Icons.logout_rounded,
-              color: CustomColors.red,
-            ),
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        ref.watch(navbarProvider.notifier).changePage(0);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Profile',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
           ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            CustomTextField(
-              controller: nameController,
-              label: 'Name',
-              hintText: 'Enter your name',
-            ),
-            CustomTextField(
-              controller: goalController,
-              label: 'Goal',
-              hintText: 'What is your aim for the next 6 months?',
-              maxLines: 5,
+          actions: [
+            IconButton(
+              onPressed: () {
+                FirebaseAuth.instance.signOut().then((value) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ),
+                  );
+                });
+              },
+              icon: Icon(
+                Icons.logout_rounded,
+                color: CustomColors.red,
+              ),
             ),
           ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              CustomTextField(
+                controller: nameController,
+                label: 'Name',
+                hintText: 'Enter your name',
+              ),
+              CustomTextField(
+                controller: goalController,
+                label: 'Goal',
+                hintText: 'What is your aim for the next 6 months?',
+                maxLines: 5,
+              ),
+            ],
+          ),
         ),
       ),
     );

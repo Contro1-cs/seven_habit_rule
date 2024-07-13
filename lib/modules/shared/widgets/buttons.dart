@@ -4,11 +4,13 @@ import 'package:seven_habit_rule/modules/shared/widgets/colors.dart';
 class GeneralButton extends StatelessWidget {
   final String? title;
   final Widget? icon;
+  final Color color;
   final Function()? onPressed;
   const GeneralButton({
     super.key,
     this.title,
     this.icon,
+    this.color = CustomColors.darkBlue,
     this.onPressed,
   });
 
@@ -21,7 +23,7 @@ class GeneralButton extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: CustomColors.darkBlue,
+          color: color,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

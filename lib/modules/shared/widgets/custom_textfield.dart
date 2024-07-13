@@ -9,6 +9,7 @@ class CustomTextField extends StatelessWidget {
   final String? errorText;
   final TextInputType? textInputType;
   final bool obscureText;
+  final bool autofocus;
   final TextStyle? textStyle;
   const CustomTextField({
     super.key,
@@ -19,6 +20,7 @@ class CustomTextField extends StatelessWidget {
     this.errorText,
     this.textInputType = TextInputType.text,
     this.obscureText = false,
+    this.autofocus = false,
     this.textStyle = const TextStyle(
       color: CustomColors.lightBlack,
       fontSize: 18,
@@ -48,13 +50,13 @@ class CustomTextField extends StatelessWidget {
           TextField(
             controller: controller,
             obscureText: obscureText,
+            autofocus: autofocus,
             keyboardType: textInputType,
             maxLines: maxLines ?? 1,
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: TextStyle(
                 color: Colors.black.withOpacity(0.3),
-                fontSize: 14,
               ),
               errorText: errorText,
               errorBorder: OutlineInputBorder(

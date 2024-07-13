@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seven_habit_rule/modules/home/widgets/custom_checkbox.dart';
 import 'package:seven_habit_rule/modules/shared/models/task_model.dart';
@@ -20,9 +22,11 @@ class TaskTile extends StatelessWidget {
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 6),
-        padding: const EdgeInsets.fromLTRB(16, 4, 6, 4),
+        padding: const EdgeInsets.only(left: 12),
         decoration: BoxDecoration(
-          color: CustomColors.darkBlue,
+          color: taskModel.status
+              ? CustomColors.darkBlue.withOpacity(0.7)
+              : CustomColors.darkBlue,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
@@ -31,15 +35,32 @@ class TaskTile extends StatelessWidget {
           children: [
             Text(
               taskModel.title,
-              style: const TextStyle(
-                color: CustomColors.white,
+              style: TextStyle(
+                decoration:
+                    taskModel.status ? TextDecoration.lineThrough : null,
+                decorationThickness: 1.5,
+                decorationColor: CustomColors.white,
+                color: taskModel.status
+                    ? CustomColors.white.withOpacity(0.5)
+                    : CustomColors.white,
                 fontSize: 20,
                 fontWeight: FontWeight.normal,
               ),
             ),
             CustomCheckbox(
               value: taskModel.status,
-              onChanged: (value) {},
+              onTap: () {
+                String uid = FirebaseAuth.instance.currentUser!.uid;
+                FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(uid)
+                    .collection('tasks')
+                    .doc(taskModel.id)
+                    .update({
+                  'status': !taskModel.status,
+                  'updatedAt': DateTime.now().toIso8601String(),
+                });
+              },
             ),
           ],
         ),
